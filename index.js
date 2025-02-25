@@ -83,12 +83,58 @@ function standard_gamma_raw_normal(shape) {
   }
 }
 
+function stdLibSample2(alpha, beta) {
+  var sigma;
+  var flg;
+  var mu;
+  var A;
+  var B;
+  var C;
+  var L;
+  var s;
+  var u;
+  var x;
+  var y;
+
+  A = alpha - 1.0;
+  B = beta - 1.0;
+  C = A + B;
+  L = C * Math.log(C);
+  mu = A / C;
+  sigma = 0.5 / Math.pow(C, 0.5);
+
+  flg = true;
+  while (flg === true) {
+    s = gaussianRandom();
+    x = mu + s * sigma;
+    if (x >= 0.0 && x <= 1.0) {
+      u = Math.random();
+      y = A * Math.log(x / A);
+      y += B * Math.log((1.0 - x) / B);
+      y += L + 0.5 * s * s;
+      if (y >= Math.log(u)) {
+        flg = false;
+      }
+    }
+  }
+  return x;
+}
+
 function generateBetaRandomUsingRandomGammaUniform(alpha, beta, n) {
   const randomNumbers = [];
   for (let i = 0; i < n; i++) {
     const gamma1 = standard_gamma_raw_uniform(alpha);
     const gamma2 = standard_gamma_raw_uniform(beta);
     randomNumbers.push(gamma1 / (gamma1 + gamma2));
+  }
+  return randomNumbers;
+}
+
+function generateBetaRandomUsingStdlibRaw(alpha, beta, n) {
+  const randomNumbers = [];
+  for (let i = 0; i < n; i++) {
+    const rng = stdLibSample2(alpha, beta);
+    randomNumbers.push(rng);
   }
   return randomNumbers;
 }
@@ -130,6 +176,11 @@ function plotRandomNumberComparison(alpha, beta, n) {
     beta,
     n
   );
+  const randomStdlibNumbersSample2 = generateBetaRandomUsingStdlibRaw(
+    alpha,
+    beta,
+    n
+  );
   const createHtmlContent = `
     <html>
     <head>
@@ -146,6 +197,9 @@ function plotRandomNumberComparison(alpha, beta, n) {
         )};
         const randomRawNumbersNormal = ${JSON.stringify(
           randomRawNumbersNormal
+        )};
+        const randomStdlibNumbersSample2 = ${JSON.stringify(
+          randomStdlibNumbersSample2
         )};
         const data = [
           {
@@ -169,6 +223,12 @@ function plotRandomNumberComparison(alpha, beta, n) {
             x: randomRawNumbersNormal,
             type: 'histogram',
             name: 'Random Raw Numbers Normal'
+          },
+          {
+            x: randomStdlibNumbersSample2,
+            type: 'histogram',
+            name: 'Random Stdlib Numbers Sample2'
+            
           }
         ];
         Plotly.newPlot('plot', data);
