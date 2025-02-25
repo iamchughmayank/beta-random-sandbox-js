@@ -1,0 +1,25 @@
+{
+  "name": "beta-random-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamchughmayank/beta-random-sandbox-js.git"
+  },
+  "author": "iamchughmayank@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamchughmayank/beta-random-sandbox-js/issues"
+  },
+  "homepage": "https://github.com/iamchughmayank/beta-random-sandbox-js#readme",
+  "dependencies": {
+    "@stdlib/random-base-beta": "^0.2.1",
+    "@stdlib/stats-base-dists-beta-ctor": "^0.2.2",
+    "fs": "^0.0.1-security",
+    "plotly.js-dist": "^3.0.1"
+  }
+}
